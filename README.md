@@ -1,7 +1,7 @@
 # blogSystem
 This is a project about a blogSystem written in Java.
 
-## 一、项目介绍：
+# 一、项目介绍：
 基于SpringBoot+Mybatis+Mysql+Redis+kafka+Elasticsearch的多人博客系统，实现了用户登录、文章查看、文章评
 论、文章搜索、私聊、热门帖子等功能。
 <ol>
@@ -14,12 +14,12 @@ This is a project about a blogSystem written in Java.
 使用kaptcha进行图片验证。</li>
 <li>通过字典树实现敏感词过滤</li>
 </ol>
-## 二、使用方法
+# 二、使用方法
 <ol>
   <li>把代码git到本地</li>
   <li>在IDEA中导入maven项目</li>
   <li>确保IDEA本地maven仓库配置正确</li>
-  <li>本机确保有mysql、redis、kafka环境</li>
+  <li>本机确保有mysql、redis、kafka、es环境</li>
   <li>分别启动mysql、redis、kafka</li>
   <li>kafka的配置文件group-id要改成application.properties中相同的名字</li>
   <li>编译项目，需要下载很多依赖，可能比较慢</li>
