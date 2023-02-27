@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nowcoder.community.Mapper.MessageMapper">
+    <sql id="selectFileds">
+        id,from_id,to_id,conversation_id,content,status,create_time
+    </sql>
+    <sql id="insertFileds">
+        from_id,to_id,conversation_id,content,status,create_time
+    </sql>
+    <insert id="insertLetter" parameterType="com.nowcoder.community.Bean.Message" keyProperty="id">
+        insert into message(<include refid="insertFileds"></include>)
+        values(#{fromId},#{toId},#{conversationId},#{content},#{status},#{createTime})
+    </insert>
+    <update id="updateStatus">
+        update message set status = #{status}
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+
+    <select id="selectConversations" resultType="com.nowcoder.community.Bean.Message">
+        select <include refid="selectFileds"></include>from message,
+        (select max(id) max_id from message where status!=2 and from_id!=1 group by conversation_id) t
+        where message.id=t.max_id
+        and (from_id=#{userId} or to_id=#{userId})
+        order by create_time desc
+        limit #{offset},#{limit}
+    </select>
+    <select id="selectConversationCount" resultType="java.lang.Integer">
+        select count(*) from (
+            select distinct conversation_id from message
+            where status!=2 and from_id!=1
+            and (from_id=#{userId} or to_id=#{userId})
+        ) m
+    </select>
+    <select id="selectLetters" resultType="com.nowcoder.community.Bean.Message">
+        select <include refid="selectFileds"></include> from message
+        where status!=2 and from_id!=1
+        and conversation_id=#{conversationId}
+        order by create_time desc
+        limit #{offset},#{limit}
+    </select>
+    <select id="selectLettersCount" resultType="java.lang.Integer">
+        select count(*) from message
+        where status!=2 and from_id!=1
+        and conversation_id=#{conversationId}
+    </select>
+    <select id="selectUnreadCount" resultType="java.lang.Integer">
+        select count(id) from message
+        where from_id!=1
+        and status=0
+        and to_id=#{userId}
+        <if test="conversationId!=null">
+            and conversation_id=#{conversationId}
+        </if>
+    </select>
+    <select id="selectLatestMessage" resultType="com.nowcoder.community.Bean.Message">
+        select <include refid="selectFileds"></include> from message
+        where id in(
+        select max(id) from message
+        where status!=2
+        and from_id=1
+        and to_id=#{userId}
+        and conversation_id=#{topics})
+    </select>
+    <select id="selectUnreadMessageNum" resultType="java.lang.Integer">
+        select count(id) from message
+        where status=0
+        and from_id=1
+        and to_id=#{userId}
+        <if test="topics!=null">
+            and conversation_id=#{topics}
+        </if>
+    </select>
+    <select id="selectMessageNum" resultType="java.lang.Integer">
+        select count(id) from message
+        where status!=2
+        and from_id=1
+        and to_id=#{userId}
+        and conversation_id=#{topics}
+    </select>
+    <select id="selectLettersTo" resultType="com.nowcoder.community.Bean.Message">
+        select <include refid="selectFileds"></include> from message
+        where status!=2 and to_id=#{toId}
+        and conversation_id=#{conversationId}
+        order by create_time desc
+        limit #{offset},#{limit}
+
+    </select>
+
+
+</mapper>
