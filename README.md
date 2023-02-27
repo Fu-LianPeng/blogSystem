@@ -15,4 +15,13 @@ This is a project about a blogSystem written in Java.
 <li>通过字典树实现敏感词过滤</li>
 </ol>
 ## 二、使用方法
-1. 把代码git到本地
+<ol>
+  <li>把代码git到本地</li>
+  <li>在IDEA中导入maven项目</li>
+  <li>确保IDEA本地maven仓库配置正确</li>
+  <li>本机确保有mysql、redis、kafka环境</li>
+  <li>分别启动mysql、redis、kafka</li>
+  <li>kafka的配置文件group-id要改成application.properties中相同的名字</li>
+  <li>编译项目，需要下载很多依赖，可能比较慢</li>
+  <li>运行项目，此时浏览器可以访问8080端口了</li>
+</ol>
